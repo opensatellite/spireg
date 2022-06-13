@@ -8,16 +8,16 @@ SPIREG - SPI slave logic for register access
 
 # Connection
 MCU <--SPI--> SPIREG <--regaccess--> User logic   
-SPI: MOSI MISO SCLK NSS   
-regaccess: reg_addr, reg_data_i, reg_data_o, reg_data_o_vld   
-regaccess(additional): status, fastcmd, fastcmd_vld   
+* SPI: MOSI MISO SCLK NSS   
+* regaccess: reg_addr, reg_data_i, reg_data_o, reg_data_o_vld   
+* regaccess(additional): status, fastcmd, fastcmd_vld   
 
 # Protocol   
-SPI settings   
+### SPI settings   
 * Databits = 8, MSB First, Mode = 0 (CPOL=Low, CPHA=1edge)    
 * sclk_freq <= clk / 2   
 
-# SPI commands   
+### SPI commands   
 * Read data   
 cmd = addr, addr = 0 ~ 63   
 ```
@@ -42,7 +42,7 @@ cmd = 0xc0+fastcmd, fastcmd = 0 ~ 63
     MISO: |status |   
 ```
 
-# Arduino example code
+### Arduino example
 TBD
 
 # Simple register bank example
