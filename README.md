@@ -92,8 +92,8 @@ end else begin
 end
 ```
 
-# Complete example for "fastcmd" feature
-* see spireg_example.v   
+# Complete example 
+see spireg_example.v about "fastcmd" feature   
 
 #  Resources ultilization   
 Device: Xilinx XC7S6   
