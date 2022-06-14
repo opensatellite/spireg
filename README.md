@@ -1,9 +1,9 @@
-# spireg
-SPIREG - SPI slave logic for register access
+# SPIREG
+SPIREG is an SPI slave logic for register access
 * Easy integration with Arduino SPI
 * Support N*8 bits reg width, 1~64 registers
-* Status byte can be acquired on first byte read.
-* FastCmd can send command code on first byte write.
+* Status byte can be acquired on the first byte read.
+* FastCmd can send command code on the first byte write.
 * Very low resources consumption (~100LUT, ~200FF)
 
 # Connection
@@ -46,7 +46,7 @@ cmd = 0xc0+fastcmd, fastcmd = 0 ~ 63
 TBD
 
 # Simple register bank example
-```
+```verilog
 wire [3:0] reg_addr;
 wire [15:0] reg_data_i, reg_data_o;
 wire reg_data_o_vld;
@@ -93,10 +93,10 @@ end
 ```
 
 # Complete example 
-see spireg_example.v about "fastcmd" feature   
+Check out `spireg_example.v` for "fastcmd" feature
 
-#  Resources ultilization   
-Device: Xilinx XC7S6   
+#  Resources ultilization
+Tested Device: Xilinx XC7S6
 User registers: 16*16bits   
 LUT used: 112 of 3750   
 FF used: 199 of 7500   
