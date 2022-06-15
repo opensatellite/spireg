@@ -1,51 +1,67 @@
 # SPIREG
-SPIREG is an SPI slave logic for register access
-* Easy integration with Arduino SPI
-* Support N*8 bits reg width, 1~64 registers
-* Status byte can be acquired on the first byte read.
-* FastCmd can send command code on the first byte write.
-* Very low resources consumption (~100LUT, ~200FF)
 
-# Connection
-MCU <--SPI--> SPIREG <--regaccess--> User logic   
-* SPI: MOSI MISO SCLK NSS   
-* regaccess: reg_addr, reg_data_i, reg_data_o, reg_data_o_vld   
-* regaccess(additional): status, fastcmd, fastcmd_vld   
+SPIREG is an SPI slave controller that can be used for register level access for user logic
 
-# Protocol   
-### SPI settings   
-* Databits = 8, MSB First, Mode = 0 (CPOL=Low, CPHA=1edge)    
-* sclk_freq <= clk / 2   
+* Easy interoperating with Arduino's SPI
+* Supports register widths of N * 8 bits and 1 to 64 registers
+* The status byte can be obtained when the first byte is read
+* FastCmd can send command code when the first byte is written
+* Very low resources overhead (~100LUT, ~200FF)
 
-### SPI commands   
-* Read data   
-cmd = addr, addr = 0 ~ 63   
+## Connection
+
+MCU <--SPI--> SPIREG <--regaccess--> User logic
+
+* SPI: MOSI MISO SCLK NSS
+* regaccess: reg_addr, reg_data_i, reg_data_o, reg_data_o_vld
+* regaccess(additional): status, fastcmd, fastcmd_vld
+
+## Protocol
+
+### SPI settings
+
+* Databits = 8, MSB First, Mode = 0 (CPOL=Low, CPHA=1edge)
+* sclk_freq <= clk / 2
+
+### SPI commands
+
+* Read data
+cmd = addr, addr = 0 ~ 63
+
+```txt
+    MOSI: |addr   |0xff        |0xff         |0xff          |0xff           | ...
+    MISO: |status |d[addr][7:0]|d[addr][15:8]|d[addr+1][7:0]|d[addr+1][15:8]| ...
 ```
-    MOSI: |addr   |0xff        |0xff         |0xff          |0xff           | ...   
-    MISO: |status |d[addr][7:0]|d[addr][15:8]|d[addr+1][7:0]|d[addr+1][15:8]| ...   
+
+* Write data
+cmd = 0x80+addr, addr = 0 ~ 63
+
+```txt
+    MOSI: |cmd    |d[addr][7:0]|d[addr][15:8]|d[addr+1][7:0]|d[addr+1][15:8]| ...
+    MISO: |status |0x00        |0x00         |0x00          |0x00           | ...
 ```
-* Write data   
-cmd = 0x80+addr, addr = 0 ~ 63   
+
+* Fast command
+cmd = 0xc0+fastcmd, fastcmd = 0 ~ 63
+
+```txt
+    MOSI: |cmd    |
+    MISO: |status |
 ```
-    MOSI: |cmd    |d[addr][7:0]|d[addr][15:8]|d[addr+1][7:0]|d[addr+1][15:8]| ...   
-    MISO: |status |0x00        |0x00         |0x00          |0x00           | ...   
-```
-* Fast command   
-cmd = 0xc0+fastcmd, fastcmd = 0 ~ 63   
-```
-    MOSI: |cmd    |   
-    MISO: |status |   
-```
-* Status query   
-```
-    MOSI: |0x00   |   
-    MISO: |status |   
+
+* Status query
+
+```txt
+    MOSI: |0x00   |
+    MISO: |status |
 ```
 
 ### Arduino example
+
 TBD
 
-# Simple register bank example
+## Simple register bank example
+
 ```verilog
 wire [3:0] reg_addr;
 wire [15:0] reg_data_i, reg_data_o;
@@ -92,11 +108,13 @@ end else begin
 end
 ```
 
-# Complete example 
+## Complete example
+
 Check out `spireg_example.v` for "fastcmd" feature
 
-#  Resources ultilization
+## Resources ultilization
+
 Tested Device: Xilinx XC7S6
-User registers: 16*16bits   
-LUT used: 112 of 3750   
-FF used: 199 of 7500   
+User registers: 16*16bits
+LUT used: 112 of 3750
+FF used: 199 of 7500
