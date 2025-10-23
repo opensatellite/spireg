@@ -39,9 +39,9 @@ module spireg #(
     output reg fastcmd_vld
 );
 
-reg mosi1, mosi2;
-reg sclk1, sclk2, sclk3;
-reg nss1, nss2, nss3;
+(* ASYNC_REG = "TRUE" *) reg mosi1, mosi2;
+(* ASYNC_REG = "TRUE" *) reg sclk1, sclk2, sclk3;
+(* ASYNC_REG = "TRUE" *) reg nss1, nss2, nss3;
 
 reg [REG_W-2:0] mosi_sr;
 wire [REG_W-1:0] isr; 
@@ -77,7 +77,7 @@ localparam cmd_reg_rd = 2'b00;
 localparam cmd_reg_wr = 2'b10;
 localparam cmd_fastcmd = 2'b11;
 
-always @(posedge clk or negedge nrst)
+always @(posedge clk)
 if(!nrst) begin
     mosi_sr <= 0;
     osr <= 0;
@@ -169,7 +169,7 @@ assign sclk_samp = sclk2 && (!sclk3);   //rising edge
 assign sclk_upd = (!sclk2) && sclk3;    //falling edge
 assign nss_val = nss2;
 
-always @(posedge clk or negedge nrst)
+always @(posedge clk)
 if(!nrst) begin
     mosi1 <= 0;
     mosi2 <= 0;
